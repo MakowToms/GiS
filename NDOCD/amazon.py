@@ -1,10 +1,8 @@
-from NDOCD.load_data import get_amazon_graph
-from scipy.sparse import load_npz, save_npz
+from scipy.sparse import load_npz
 from NDOCD.NDOCD import NDOCD
 import numpy as np
-from time import time
 from NDOCD.load_data import write_communities_to_file
-from NDOCD.measures import normalized_mutual_information
+from measures.mutual_information import normalized_mutual_information
 
 # graph = get_amazon_graph()
 # save_npz("data/amazon/graph.npz", graph)

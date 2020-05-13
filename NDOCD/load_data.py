@@ -20,33 +20,53 @@ def create_graph_by_cols_and_rows(size, cols, rows):
     return mat
 
 
-def get_actors_graph():
+def get_actors_graph(save_transformed=True):
     data = pd.read_csv("data/allActorsRelation.csv", delimiter=";")
     uniques = np.unique(data.iloc[:, 0:2])
     size = uniques.shape[0]
     to_replace = dict((val, i) for (i, val) in enumerate(uniques))
     cols = np.array(data.iloc[:, 0].replace(to_replace))
     rows = np.array(data.iloc[:, 1].replace(to_replace))
+    if save_transformed:
+        to_save = pd.DataFrame(np.vstack([cols, rows]).transpose(), dtype=np.int)
+        to_save.to_csv("data/Filmweb Graph/actors-transformed.txt", index=False)
     return create_graph_by_cols_and_rows(size, cols, rows)
 
 
-def get_amazon_graph():
+def get_amazon_graph(save_transformed=True):
     data = pd.read_csv("data/amazon/com-amazon.ungraph.txt", delimiter="\t", comment='#')
     uniques = np.unique(data.iloc[:, 0:2])
     size = uniques.shape[0]
     to_replace = dict((val, i) for (i, val) in enumerate(uniques))
     cols = replace(np.array(data.iloc[:, 0]), to_replace)
     rows = replace(np.array(data.iloc[:, 1]), to_replace)
+    if save_transformed:
+        to_save = pd.DataFrame(np.vstack([cols, rows]).transpose(), dtype=np.int)
+        to_save.to_csv("data/amazon/amazon-transformed.txt", index=False)
     return create_graph_by_cols_and_rows(size, cols, rows)
 
 
-def get_email_graph():
+def get_email_graph(save_transformed=True):
     data = pd.read_csv("data/email/email-Eu-core.txt", delimiter=" ", comment='#', header=None)
     uniques = np.unique(data.iloc[:, 0:2])
     size = uniques.shape[0]
     to_replace = dict((val, i) for (i, val) in enumerate(uniques))
     cols = replace(np.array(data.iloc[:, 0]), to_replace)
     rows = replace(np.array(data.iloc[:, 1]), to_replace)
+    if save_transformed:
+        to_save = pd.DataFrame(np.vstack([cols, rows]).transpose(), dtype=np.int)
+        to_save.to_csv("data/email/email-transformed.txt", index=False, sep=" ")
+    return create_graph_by_cols_and_rows(size, cols, rows)
+
+
+def get_benchmark_graph(save_transformed=True):
+    data = pd.read_csv("LFR-Benchmark/binary_networks/network.dat", delimiter="\t", comment='#', header=None)
+    size = np.max(np.max(data))
+    cols = np.array(data.iloc[:, 0]) - 1
+    rows = np.array(data.iloc[:, 1]) - 1
+    if save_transformed:
+        to_save = pd.DataFrame(np.vstack([cols, rows]).transpose(), dtype=np.int)
+        to_save.to_csv("LFR-Benchmark/binary_networks/network-transformed.dat", index=False, sep=" ")
     return create_graph_by_cols_and_rows(size, cols, rows)
 
 

@@ -7,18 +7,20 @@ from measures.link_belong_modularity import cal_modularity, get_graph_info
 from benchmark.rewrite_communities import rewrite_communities, get_communities_list
 import time
 
-# graph = get_benchmark_graph()
-# rewrite_communities()
+folder = "data/benchmark_weighted/"
+file_appending = "b1_" + str(500) + str(0.2)
+graph = get_benchmark_graph(folder, file_appending=file_appending, weighted=True)
+rewrite_communities(folder, file_appending)
 # # save_npz("data/benchmark/graph.npz", graph)
 # # graph = load_npz("data/benchmark/graph.npz")
-# ndocd = NDOCD(graph)
+ndocd = NDOCD(graph)
 # # np.save("data/benchmark/neighbours.npy", ndocd.neighbours_edges)
 # # ndocd = NDOCD(graph, np.load("data/benchmark/neighbours.npy"), modification=True, modification_type="percent", modification_percent=0.5, modification_number=10)
 #
-# ndocd.JS_threshold = 0.3
-# ndocd.MD_threshold = 0.3
+ndocd.JS_threshold = 1
+ndocd.MD_threshold = 1
 #
-# coms = ndocd.find_all_communities(prune_every=10)
+coms = ndocd.find_all_communities(prune_every=1)
 # bigger_than = 6
 # coms2 = [list(com.indices) for com in coms if len(list(com.indices)) > bigger_than]
 # len(coms2)
@@ -35,9 +37,3 @@ import time
 # mod_base = cal_modularity(get_graph_info("LFR-Benchmark/binary_networks/network-transformed.dat"), get_communities_list())
 # print(f'modularity for ndocd {mod_ndocd:0.04}')
 # print(f'modularity for ground-truth {mod_base:0.04}')
-
-
-folder = "LFR-Benchmark/binary_networks/"
-file_appending = ""
-
-

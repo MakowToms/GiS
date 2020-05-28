@@ -10,8 +10,8 @@ import subprocess
 import re
 
 
-def test_ndocd(folder, file_appending, bigger_than=6, **kwargs):
-    graph = get_benchmark_graph(folder, file_appending)
+def test_ndocd(folder, file_appending, bigger_than=6, weighted=False, **kwargs):
+    graph = get_benchmark_graph(folder, file_appending, weighted=weighted)
     rewrite_communities(folder, file_appending)
 
     start = time.time()
@@ -49,4 +49,13 @@ def create_benchmark(N=500, degree=25, max_degree=50, mu=0.1, on_over_n=0.1, om=
     subprocess.check_call(['mv', 'community.dat', 'data/benchmark/community' + file_appending + '.dat'])
 
 
+def create_benchmark_weighted(N=500, degree=25, max_degree=50, mut=0.2, muw=0.3, beta=1.5, on_over_n=0.1, om=2, file_appending="500"):
+    on = int(N*on_over_n)
+    text = f'-N {N} \n-k {degree} \n-maxk {max_degree} \n-mut {mut} \n-muw {muw} \n-beta {beta} \n-t1 2 \n-t2 1 \n-minc 10 \n-maxc 50 \n-on {on} \n-om {om}'
+    with open('LFR-Benchmark/weighted_networks/flags.dat', 'w') as f:
+        f.write(text)
+    res = subprocess.check_output(['LFR-Benchmark/weighted_networks/benchmark', '-f', 'LFR-Benchmark/weighted_networks/flags.dat'])
+    print(res)
+    subprocess.check_call(['mv', 'network.dat', 'data/benchmark_weighted/network' + file_appending + '.dat'])
+    subprocess.check_call(['mv', 'community.dat', 'data/benchmark_weighted/community' + file_appending + '.dat'])
 

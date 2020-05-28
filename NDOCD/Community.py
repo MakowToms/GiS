@@ -19,9 +19,9 @@ class Community:
     def add_vertex(self, vertex, edges):
         self.n_vertices += 1
         self.vertices[0, vertex] = 1
-        self.n_edges += np.sum(edges)
         non_zero_ind = self.vertices.nonzero()[1]
         edges = edges[:, non_zero_ind]
+        self.n_edges += np.sum(edges != 0)
         self.graph[vertex, non_zero_ind] = edges
         self.graph[non_zero_ind, vertex] = edges
 

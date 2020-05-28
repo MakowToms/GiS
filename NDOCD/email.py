@@ -10,7 +10,7 @@ from measures.link_belong_modularity import cal_modularity, get_graph_info
 graph = load_npz("data/email/graph.npz")
 # ndocd = NDOCD(graph)
 # np.save("data/email/neighbours.npy", ndocd.neighbours_edges)
-ndocd = NDOCD(graph, np.load("data/email/neighbours.npy"))
+ndocd = NDOCD(graph, np.load("data/email/neighbours.npy"), modification=True)
 
 ndocd.JS_threshold = 0.2
 ndocd.MD_threshold = 0.3

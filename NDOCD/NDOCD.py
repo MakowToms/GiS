@@ -6,7 +6,7 @@ from time import time
 
 
 class NDOCD:
-    def __init__(self, graph, neighbours_edges=None, beta=0.3, MD_threshold=0.2, JS_threshold=0.2):
+    def __init__(self, graph, neighbours_edges=None, beta=0.3, MD_threshold=0.2, JS_threshold=0.2, modification=False, modification_percent=0.1, modification_number=10, modification_type="percent"):
         self.graph = graph
         self.n = graph.shape[0]
         self.beta = beta
@@ -18,6 +18,10 @@ class NDOCD:
             self.neighbours_edges = self.compute_neighbours_edges()
         self.MD_threshold = MD_threshold
         self.JS_threshold = JS_threshold
+        self.modification = modification
+        self.modification_number = modification_number
+        self.modification_percent = modification_percent
+        self.modification_type = modification_type
 
     def compute_degrees(self):
         degrees = self.sum_of_rows(self.graph)
@@ -26,7 +30,7 @@ class NDOCD:
 
     def update_degrees(self, community):
         self.degrees -= self.sum_of_rows(community.get_graph())
-        self.degrees[self.degrees<2] = 2
+        self.degrees[self.degrees < 2] = 2
 
     @staticmethod
     def sum_of_rows(csr):
@@ -114,6 +118,8 @@ class NDOCD:
             return neighbours_indices
         neighbours_graph = self.graph[neighbours_indices]
         M_iK = self.edges_between_community_and_vertices(community, neighbours_graph).transpose()
+        if (community.n_vertices) == 1:
+            print(community.n_vertices)
         JS = M_iK / community.get_edges_number()
         MD = M_iK / self.degrees[neighbours_indices]
         vertices_to_add = np.logical_or(JS > self.JS_threshold, MD > self.MD_threshold)
@@ -132,6 +138,9 @@ class NDOCD:
     def create_new_community(self, prune=False):
         community = self.initialize_new_community()
         self.algorithm_step2(community)
+        # remove edges from community graph -- modification 2
+        community = self.remove_edges_from_community(community)
+
         community.stop_adding_vertices()
         self.update_degrees(community)
         self.remove_neighbours_edges(community)
@@ -141,6 +150,45 @@ class NDOCD:
             self.graph.prune()
         self.compute_neighbours_edges_from_beginning_for_vertexes_with_removed_edges(community)
         return community
+
+    def remove_edges_from_community(self, community):
+        if not self.modification:
+            return community
+        edges_number = int(community.get_edges_number())
+        i_array = np.zeros([edges_number*2])
+        j_array = np.zeros([edges_number*2])
+        t = np.zeros([edges_number*2])
+        for index, item in enumerate(community.get_graph().items()):
+            i = item[0][0]
+            j = item[0][1]
+            i_array[index] = i
+            j_array[index] = j
+            t[index] = self.compute_t_i_j(i, j, community)
+        argsort = t.argsort()
+        if self.modification_type == "percent":
+            remove_from = int((1-self.modification_percent) * edges_number * 2)
+            t_min = t[argsort[remove_from]]
+            while remove_from+1 < edges_number*2 and t[argsort[remove_from+1]] == t_min:
+                remove_from += 1
+            remove_from += 1
+            to_remove = argsort[remove_from:edges_number*2]
+            to_remove_i = i_array[to_remove]
+            to_remove_j = j_array[to_remove]
+        else:
+            to_remove_i = i_array[t > self.modification_number]
+            to_remove_j = j_array[t > self.modification_number]
+        for i, j in zip(to_remove_i, to_remove_j):
+            community.graph[i, j] = 0
+        return community
+
+    def compute_t_i_j(self, i, j, community):
+        row = self.create_true_false_mask(self.graph[i], as_column=False)
+        column = self.create_true_false_mask(self.graph[j])
+        positive_counter = np.sum(((row * 1) @ (column * 1)).data)
+        row = self.create_true_false_mask(community.get_graph()[i], as_column=False)
+        column = self.create_true_false_mask(community.get_graph()[j])
+        negative_counter = np.sum(((row * 1) @ (column * 1)).data)
+        return positive_counter - negative_counter
 
     def find_all_communities(self, prune_every=100):
         communities = []

@@ -59,14 +59,14 @@ def get_email_graph(save_transformed=True):
     return create_graph_by_cols_and_rows(size, cols, rows)
 
 
-def get_benchmark_graph(save_transformed=True):
-    data = pd.read_csv("LFR-Benchmark/binary_networks/network.dat", delimiter="\t", comment='#', header=None)
+def get_benchmark_graph(folder="LFR-Benchmark/binary_networks/", file_appending="", save_transformed=True):
+    data = pd.read_csv(folder + "network" + file_appending + ".dat", delimiter="\t", comment='#', header=None)
     size = np.max(np.max(data))
     cols = np.array(data.iloc[:, 0]) - 1
     rows = np.array(data.iloc[:, 1]) - 1
     if save_transformed:
         to_save = pd.DataFrame(np.vstack([cols, rows]).transpose(), dtype=np.int)
-        to_save.to_csv("LFR-Benchmark/binary_networks/network-transformed.dat", index=False, sep=" ")
+        to_save.to_csv(folder + "network" + file_appending + "-transformed.dat", index=False, sep=" ")
     return create_graph_by_cols_and_rows(size, cols, rows)
 
 

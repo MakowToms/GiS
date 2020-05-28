@@ -20,6 +20,15 @@ def create_graph_by_cols_and_rows(size, cols, rows):
     return mat
 
 
+def create_graph_weighted_by_cols_and_rows(size, cols, rows, values):
+    rang = np.arange(size)
+    mat = coo_matrix((values, (rows, cols)), shape=[int(size), int(size)]).todok()
+    mat[cols, rows] = values
+    mat[rang, rang] = np.zeros(shape=[int(size)])
+    mat = mat.tocsr()
+    return mat
+
+
 def get_actors_graph(save_transformed=True):
     data = pd.read_csv("data/allActorsRelation.csv", delimiter=";")
     uniques = np.unique(data.iloc[:, 0:2])
@@ -59,14 +68,18 @@ def get_email_graph(save_transformed=True):
     return create_graph_by_cols_and_rows(size, cols, rows)
 
 
-def get_benchmark_graph(folder="LFR-Benchmark/binary_networks/", file_appending="", save_transformed=True):
+def get_benchmark_graph(folder="LFR-Benchmark/binary_networks/", file_appending="", save_transformed=True, weighted=False):
     data = pd.read_csv(folder + "network" + file_appending + ".dat", delimiter="\t", comment='#', header=None)
     size = np.max(np.max(data))
     cols = np.array(data.iloc[:, 0]) - 1
     rows = np.array(data.iloc[:, 1]) - 1
+    if weighted:
+        weights = np.array(data.iloc[:, 2])
     if save_transformed:
         to_save = pd.DataFrame(np.vstack([cols, rows]).transpose(), dtype=np.int)
         to_save.to_csv(folder + "network" + file_appending + "-transformed.dat", index=False, sep=" ")
+    if weighted:
+        return create_graph_weighted_by_cols_and_rows(size, cols, rows, weights)
     return create_graph_by_cols_and_rows(size, cols, rows)
 
 

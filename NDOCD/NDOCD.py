@@ -6,7 +6,7 @@ from time import time
 
 
 class NDOCD:
-    def __init__(self, graph, neighbours_edges=None, beta=0.3, MD_threshold=0.2, JS_threshold=0.2, modification=False, modification_percent=0.1, modification_number=10, modification_type="percent"):
+    def __init__(self, graph, neighbours_edges=None, beta=0.3, MD_threshold=0.2, JS_threshold=0.2, modification=False, modification_percent=0.1, modification_number=10, modification_type="percent", weighted=False):
         self.graph = graph
         self.n = graph.shape[0]
         self.beta = beta
@@ -22,10 +22,11 @@ class NDOCD:
         self.modification_number = modification_number
         self.modification_percent = modification_percent
         self.modification_type = modification_type
+        self.weighted = weighted
 
     def compute_degrees(self):
         degrees = self.sum_of_rows(self.graph)
-        degrees[degrees<2] = 2
+        degrees[degrees < 2] = 2
         return degrees
 
     def update_degrees(self, community):
@@ -82,6 +83,7 @@ class NDOCD:
         community = Community(self.n, initial_vertex)
         for index, degree in self.get_neighbour_vertices(initial_vertex):
             if self.can_add_to_clique(index, community):
+                print(self.graph[index])
                 community.add_vertex(index, self.graph[index])
         return community
 
@@ -132,6 +134,7 @@ class NDOCD:
             if vertices_to_add.shape[0] == 0:
                 break
             for vertex in vertices_to_add:
+                print(self.graph[vertex])
                 community.add_vertex(vertex, self.graph[vertex])
         return community
 
@@ -141,10 +144,18 @@ class NDOCD:
         # remove edges from community graph -- modification 2
         community = self.remove_edges_from_community(community)
 
+        # non_zero_ind = community.vertices.nonzero()[1]
+
         community.stop_adding_vertices()
+        # print("indexes: ", non_zero_ind)
+        # print("graph: ", self.graph[non_zero_ind[0], non_zero_ind])
+        # print("com: ", community.graph[non_zero_ind[0], non_zero_ind])
+
         self.update_degrees(community)
         self.remove_neighbours_edges(community)
         self.graph = self.graph - community.get_graph()
+
+        # print(self.graph < 0)
         self.graph.eliminate_zeros()
         if prune:
             self.graph.prune()

@@ -19,10 +19,20 @@ class Community:
     def add_vertex(self, vertex, edges):
         self.n_vertices += 1
         self.vertices[0, vertex] = 1
-        non_zero_ind = self.vertices.nonzero()[1]
+        non_zero_ind = self.vertices.nonzero()[1][::-1]
+        # if len(non_zero_ind) > 5:
+        #     print(non_zero_ind)
+        # for index in non_zero_ind:
+        #     edge = edges[0, index]
+        #     self.n_edges += np.sum(edge)
+        #     self.graph[vertex, index] = edge
+        #     self.graph[index, vertex] = edge
+        # print("Indexes: ", non_zero_ind)
         edges = edges[:, non_zero_ind]
-        self.n_edges += np.sum(edges != 0)
+        # print('Edges: ', edges)
+        self.n_edges += np.sum(edges)
         self.graph[vertex, non_zero_ind] = edges
+        # print('Edges in graph: ', self.graph[vertex, non_zero_ind])
         self.graph[non_zero_ind, vertex] = edges
 
     def stop_adding_vertices(self):

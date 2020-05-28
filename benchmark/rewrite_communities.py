@@ -1,6 +1,7 @@
 
 
-def rewrite_communities(filename="LFR-Benchmark/binary_networks/community.dat"):
+def rewrite_communities(folder="LFR-Benchmark/binary_networks/", file_appending=""):
+    filename = folder + "community" + file_appending + ".dat"
     communities = get_communities_dict(filename)
     with open(filename.replace(".dat", "-converted.dat"), 'w') as f:
         for key in sorted(list(communities.keys())):
@@ -24,7 +25,8 @@ def get_communities_dict(filename="LFR-Benchmark/binary_networks/community.dat")
     return communities
 
 
-def get_communities_list(filename="LFR-Benchmark/binary_networks/community.dat"):
+def get_communities_list(folder="LFR-Benchmark/binary_networks/", file_appending=""):
+    filename = folder + "community" + file_appending + ".dat"
     communities = get_communities_dict(filename)
     coms = []
     for key in sorted(list(communities.keys())):

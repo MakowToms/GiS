@@ -19,3 +19,11 @@ for N in N_list:
 N_list = [i*200 for i in range(1, 11)]
 for N in N_list:
     create_benchmark(N=N, file_appending="b2_" + str(N))
+
+N_list = [500, 1000]
+mu_list = [0.1, 0.2]
+on_over_n_list = [0.1, 0.2]
+for N in N_list:
+    for mu in mu_list:
+        for on_over_n in on_over_n_list:
+            create_benchmark(N=N, mu=mu, on_over_n=on_over_n, file_appending="b3_" + str(N) + str(mu) + str(on_over_n))

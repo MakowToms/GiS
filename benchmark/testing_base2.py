@@ -3,10 +3,9 @@ from plots.plots import plot_measure_results_data, create_8_plots
 import pickle
 
 folder = "data/benchmark/"
-# N_list = [500, 1000]
-N_list = [1000]
-mu_list = [0.2, 0.5]
-on_over_n_list = [0.2, 0.5]
+N_list = [500, 1000]
+mu_list = [0.1, 0.2]
+on_over_n_list = [0.1, 0.2]
 times = []
 nmis = []
 modularities = []
@@ -24,7 +23,7 @@ for N in N_list:
             this_mods = []
             this_ncoms = []
             for JS_threshold, MD_threshold in zip(JS_thresholds, MD_thresholds):
-                time, nmi, mod_ndocd, mod_base, n_coms, n_coms_base = test_ndocd(folder, file_appending="b1_" + str(N) + str(mu) + str(on_over_n), MD_threshold=MD_threshold, JS_threshold=JS_threshold)
+                time, nmi, mod_ndocd, mod_base, n_coms, n_coms_base = test_ndocd(folder, file_appending="b3_" + str(N) + str(mu) + str(on_over_n), MD_threshold=MD_threshold, JS_threshold=JS_threshold)
                 this_times.append(time)
                 this_nmis.append(nmi)
                 this_mods.append(mod_ndocd)
@@ -40,9 +39,9 @@ for N in N_list:
             print(f'\n\n Ended: N - {N} \n\n')
 
 
-pickle.dump((times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, JS_thresholds), open("data/benchmark/b1z", 'wb'))
-# times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, JS_thresholds = pickle.load(open("data/benchmark/b1z", 'rb'))
-create_8_plots(times, nmis, modularities, n_communities, modularities_base, n_communities_base, labels, JS_thresholds, "JS and MD thresholds", "b1z")
+pickle.dump((times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, JS_thresholds), open("data/benchmark/b3z", 'wb'))
+# times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, JS_thresholds = pickle.load(open("data/benchmark/b3z", 'rb'))
+create_8_plots(times, nmis, modularities, n_communities, modularities_base, n_communities_base, labels, JS_thresholds, "JS and MD thresholds", "b3z")
 
 
 times = []
@@ -61,7 +60,7 @@ for N in N_list:
             this_mods = []
             this_ncoms = []
             for JS_threshold in JS_thresholds:
-                time, nmi, mod_ndocd, mod_base, n_coms, n_coms_base = test_ndocd(folder, file_appending="b1_" + str(N) + str(mu) + str(on_over_n), MD_threshold=MD_threshold, JS_threshold=JS_threshold)
+                time, nmi, mod_ndocd, mod_base, n_coms, n_coms_base = test_ndocd(folder, file_appending="b3_" + str(N) + str(mu) + str(on_over_n), MD_threshold=MD_threshold, JS_threshold=JS_threshold)
                 this_times.append(time)
                 this_nmis.append(nmi)
                 this_mods.append(mod_ndocd)
@@ -77,9 +76,9 @@ for N in N_list:
             print(f'\n\n Ended: N - {N} \n\n')
 
 
-pickle.dump((times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, JS_thresholds), open("data/benchmark/b1a", 'wb'))
-# times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, JS_thresholds = pickle.load(open("data/benchmark/b1a", 'rb'))
-create_8_plots(times, nmis, modularities, n_communities, modularities_base, n_communities_base, labels, JS_thresholds, "JS thresholds", "b1a")
+pickle.dump((times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, JS_thresholds), open("data/benchmark/b3a", 'wb'))
+# times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, JS_thresholds = pickle.load(open("data/benchmark/b3a", 'rb'))
+create_8_plots(times, nmis, modularities, n_communities, modularities_base, n_communities_base, labels, JS_thresholds, "JS thresholds", "b3a")
 
 times = []
 nmis = []
@@ -97,7 +96,7 @@ for N in N_list:
             this_mods = []
             this_ncoms = []
             for MD_threshold in MD_thresholds:
-                time, nmi, mod_ndocd, mod_base, n_coms, n_coms_base = test_ndocd(folder, file_appending="b1_" + str(N) + str(mu) + str(on_over_n), MD_threshold=MD_threshold, JS_threshold=JS_threshold)
+                time, nmi, mod_ndocd, mod_base, n_coms, n_coms_base = test_ndocd(folder, file_appending="b3_" + str(N) + str(mu) + str(on_over_n), MD_threshold=MD_threshold, JS_threshold=JS_threshold)
                 this_times.append(time)
                 this_nmis.append(nmi)
                 this_mods.append(mod_ndocd)
@@ -113,6 +112,6 @@ for N in N_list:
             print(f'\n\n Ended: N - {N} \n\n')
 
 
-pickle.dump((times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, MD_thresholds), open("data/benchmark/b1b", 'wb'))
-# times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, JS_thresholds = pickle.load(open("data/benchmark/b1b", 'rb'))
-create_8_plots(times, nmis, modularities, n_communities, modularities_base, n_communities_base, labels, MD_thresholds, "MD thresholds", "b1b")
+pickle.dump((times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, MD_thresholds), open("data/benchmark/b3b", 'wb'))
+# times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, MD_thresholds = pickle.load(open("data/benchmark/b3b", 'rb'))
+create_8_plots(times, nmis, modularities, n_communities, modularities_base, n_communities_base, labels, MD_thresholds, "MD thresholds", "b3b")

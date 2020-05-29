@@ -39,5 +39,10 @@ for modification, modification_type in zip([False, True, True], ["percent", "per
     print(f'\n\n Ended: modification, modification_type - {modification, modification_type} \n\n')
 
 
-labels = ["Base NDOCD", "Modification percent", "Modification number"]
-plot_measure_results_data(times, x=N_list, labels=labels, title_base="Time for different number of vertices", title_ending="", ylabel="Time", xlabel="Number of vertices", save_name="plots/b1z1_time")
+labels = ["Base NDOCD", "Modification percent", "Modification number", "BigClam"]
+plot_measure_results_data(times, log_y=True, x=N_list, labels=labels, title_base="Time for different number of vertices", title_ending="", ylabel="Time [s]", xlabel="Number of vertices", save_name="plots/b1z1_time")
+
+import pandas as pd
+times[3] = list(pd.read_csv("time.csv", header=None).iloc[:, 1]*10)
+
+pickle.dump(times, open("time.pickle", 'wb'))

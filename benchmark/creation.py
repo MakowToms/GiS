@@ -27,3 +27,16 @@ for N in N_list:
     for mu in mu_list:
         for on_over_n in on_over_n_list:
             create_benchmark(N=N, mu=mu, on_over_n=on_over_n, file_appending="b3_" + str(N) + str(mu) + str(on_over_n))
+
+
+N_list = [i*100 for i in range(1, 11)]
+for N in N_list:
+    create_benchmark(N=N, file_appending="b4_" + str(N))
+
+mu_list = [i*0.1 for i in range(1, 6)]
+for mu in mu_list:
+    create_benchmark(mu=mu, file_appending="b5_" + str(mu))
+
+on_over_n_list = [i*0.1 for i in range(1, 6)]
+for on_over_n in on_over_n_list:
+    create_benchmark(on_over_n=on_over_n, file_appending="b6_" + str(on_over_n))

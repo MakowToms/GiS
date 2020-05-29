@@ -15,3 +15,7 @@ for N in N_list:
     for on_over_n in on_over_n_list:
         create_benchmark_weighted(N=N, on_over_n=on_over_n, file_appending="b1_" + str(N) + str(on_over_n))
 
+
+N_list = [i*200 for i in range(1, 11)]
+for N in N_list:
+    create_benchmark(N=N, file_appending="b2_" + str(N))

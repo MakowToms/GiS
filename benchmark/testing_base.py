@@ -1,5 +1,5 @@
 from benchmark.methods import test_ndocd
-from plots.plots import plot_measure_results_data
+from plots.plots import plot_measure_results_data, create_8_plots
 import pickle
 
 folder = "data/benchmark/"
@@ -39,12 +39,9 @@ for N in N_list:
             print(f'\n\n Ended: N - {N} \n\n')
 
 
-plot_measure_results_data(times, x=JS_thresholds, labels=labels, title_base="Time for different number of vertices", title_ending="", ylabel="Time", xlabel="JS and MD thresholds", save_name="plots/b1z_time")
-plot_measure_results_data(nmis, x=JS_thresholds, labels=labels, title_base="Mutual information for different number of vertices", title_ending="", ylabel="Normalized mutual information", xlabel="JS and MD thresholds", save_name="plots/b1z_nmi")
-plot_measure_results_data(modularities, error=modularities_base, x=JS_thresholds, labels=labels, title_base="Modularities for different number of vertices", title_ending="", ylabel="Link belong modularity", xlabel="JS and MD thresholds", save_name="plots/b1z_modularity")
-plot_measure_results_data(n_communities, error=n_communities_base, x=JS_thresholds, labels=labels, title_base="Communities for different number of vertices", title_ending="", ylabel="Number of communities", xlabel="JS and MD thresholds", save_name="plots/b1z_ncoms")
 pickle.dump((times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, JS_thresholds), open("data/benchmark/b1z", 'wb'))
 # times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, JS_thresholds = pickle.load(open("data/benchmark/b1z", 'rb'))
+create_8_plots(times, nmis, modularities, n_communities, modularities_base, n_communities_base, labels, JS_thresholds, "JS and MD thresholds", "b1z")
 
 
 times = []
@@ -79,12 +76,9 @@ for N in N_list:
             print(f'\n\n Ended: N - {N} \n\n')
 
 
-plot_measure_results_data(times, x=JS_thresholds, labels=labels, title_base="Time for different number of vertices", title_ending="", ylabel="Time", xlabel="JS threshold", save_name="plots/b1a_time")
-plot_measure_results_data(nmis, x=JS_thresholds, labels=labels, title_base="Mutual information for different number of vertices", title_ending="", ylabel="Normalized mutual information", xlabel="JS threshold", save_name="plots/b1a_nmi")
-plot_measure_results_data(modularities, error=modularities_base, x=JS_thresholds, labels=labels, title_base="Modularities for different number of vertices", title_ending="", ylabel="Link belong modularity", xlabel="JS threshold", save_name="plots/b1a_modularity")
-plot_measure_results_data(n_communities, error=n_communities_base, x=JS_thresholds, labels=labels, title_base="Communities for different number of vertices", title_ending="", ylabel="Number of communities", xlabel="JS threshold", save_name="plots/b1a_ncoms")
 pickle.dump((times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, JS_thresholds), open("data/benchmark/b1a", 'wb'))
 # times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, JS_thresholds = pickle.load(open("data/benchmark/b1a", 'rb'))
+create_8_plots(times, nmis, modularities, n_communities, modularities_base, n_communities_base, labels, JS_thresholds, "JS thresholds", "b1a")
 
 times = []
 nmis = []
@@ -118,9 +112,6 @@ for N in N_list:
             print(f'\n\n Ended: N - {N} \n\n')
 
 
-plot_measure_results_data(times, x=MD_thresholds, labels=labels, title_base="Time for different number of vertices", title_ending="", ylabel="Time", xlabel="MD threshold", save_name="plots/b1b_time")
-plot_measure_results_data(nmis, x=MD_thresholds, labels=labels, title_base="Mutual information for different number of vertices", title_ending="", ylabel="Normalized mutual information", xlabel="MD threshold", save_name="plots/b1b_nmi")
-plot_measure_results_data(modularities, error=modularities_base, x=MD_thresholds, labels=labels, title_base="Modularities for different number of vertices", title_ending="", ylabel="Link belong modularity", xlabel="MD threshold", save_name="plots/b1b_modularity")
-plot_measure_results_data(n_communities, error=n_communities_base, x=MD_thresholds, labels=labels, title_base="Communities for different number of vertices", title_ending="", ylabel="Number of communities", xlabel="MD threshold", save_name="plots/b1b_ncoms")
 pickle.dump((times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, MD_thresholds), open("data/benchmark/b1b", 'wb'))
 # times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, JS_thresholds = pickle.load(open("data/benchmark/b1b", 'rb'))
+create_8_plots(times, nmis, modularities, n_communities, modularities_base, n_communities_base, labels, MD_thresholds, "MD thresholds", "b1b")

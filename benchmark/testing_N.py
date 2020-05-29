@@ -1,9 +1,9 @@
 from benchmark.methods import test_ndocd
-from plots.plots import plot_measure_results_data
+from plots.plots import plot_measure_results_data, create_3_plots
 import pickle
 
 folder = "data/benchmark/"
-N_list = [i*200 for i in range(1, 11)]
+N_list = [i*100 for i in range(1, 11)]
 times = []
 nmis = []
 modularities = []
@@ -21,7 +21,7 @@ for modification, modification_type in zip([False, True, True], ["percent", "per
     this_mods_base = []
     this_coms_base = []
     for N in N_list:
-        time, nmi, mod_ndocd, mod_base, n_coms, n_coms_base = test_ndocd(folder, file_appending="b2_" + str(N), MD_threshold=0.3, JS_threshold=0.3, modification=modification, modification_type=modification_type, modification_number=modification_number, modification_percent=modification_percent)
+        time, nmi, mod_ndocd, mod_base, n_coms, n_coms_base = test_ndocd(folder, file_appending="b4_" + str(N), MD_threshold=0.3, JS_threshold=0.3, modification=modification, modification_type=modification_type, modification_number=modification_number, modification_percent=modification_percent)
         this_times.append(time)
         this_nmis.append(nmi)
         this_mods.append(mod_ndocd)
@@ -39,10 +39,13 @@ for modification, modification_type in zip([False, True, True], ["percent", "per
     print(f'\n\n Ended: modification, modification_type - {modification, modification_type} \n\n')
 
 
-labels = ["Base NDOCD", "Modification percent", "Modification number", "BigClam"]
-plot_measure_results_data(times, log_y=True, x=N_list, labels=labels, title_base="Time for different number of vertices", title_ending="", ylabel="Time [s]", xlabel="Number of vertices", save_name="plots/b1z1_time")
+labels = ["Base NDOCD", "Modification percent", "Modification number", "BigClam"][:3]
+create_3_plots(nmis, modularities, n_communities, modularities_base, n_communities_base, labels, N_list, "number of vertices", "b4")
 
-import pandas as pd
-times.append(list(pd.read_csv("time.csv", header=None).iloc[:, 1]))
+# pickle.dump((times, nmis, modularities, n_communities, labels, modularities_base, n_communities_base, N_list), open("data/benchmark/b4", 'wb'))
 
-pickle.dump(times, open("time.pickle", 'wb'))
+# nmis[0] = [a+0.001 for a in nmis[0]]
+# modularities[0] = [a-0.005 for a in modularities[0]]
+# n_communities[0] = [a+0.1 for a in n_communities[0]]
+# import pandas as pd
+# times[3] = list(pd.read_csv("time.csv", header=None).iloc[:, 1]*10)

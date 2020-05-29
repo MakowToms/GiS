@@ -9,12 +9,15 @@ from measures.modularity import convert_communities_to_dict, get_modularity
 
 graph = get_email_graph()
 start = time.time()
-ndocd = NDOCD(graph)
+# ndocd = NDOCD(graph)
 # np.save("data/email/neighbours.npy", ndocd.neighbours_edges)
 # ndocd = NDOCD(graph, np.load("data/email/neighbours.npy"), modification=True)
+# ndocd = NDOCD(graph, modification=True, modification_type="percent", modification_percent=0.2)
+ndocd = NDOCD(graph, modification=True, modification_type="number", modification_number=20)
 
-ndocd.JS_threshold = 0.33
-ndocd.MD_threshold = 0.33
+
+ndocd.JS_threshold = 0.8
+ndocd.MD_threshold = 0.25
 
 coms = ndocd.find_all_communities(prune_every=1)
 end = time.time()
@@ -52,8 +55,9 @@ for com in coms2:
 # print(f"Mod6: {mod6}")
 # print(f"Mod6: {mod7}")
 
-mod_ndocd = cal_modularity(get_graph_info("data/email/email-transformed.txt"), coms2)
-mod_base = cal_modularity(get_graph_info("data/email/email-transformed.txt"), get_communities_list2("data/email/email-communities", " "))
+nx_graph = get_graph_info("data/email/email-transformed.txt")
+mod_ndocd = get_modularity(nx_graph , convert_communities_to_dict(coms2))
+mod_base = get_modularity(nx_graph , convert_communities_to_dict(get_communities_list2("data/email/email-communities", " ")))
 print(f"Normalized mutual information: {nmi:0.04}")
 print(f'Average size: {length/len(coms2)}')
 print(f'Number of communities: {len(coms2)}')

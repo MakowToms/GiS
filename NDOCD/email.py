@@ -5,6 +5,7 @@ from NDOCD.load_data import write_communities_to_file, get_email_graph, get_comm
 from measures.mutual_information import normalized_mutual_information
 from measures.link_belong_modularity import cal_modularity, get_graph_info
 import time
+from measures.modularity import convert_communities_to_dict, get_modularity
 
 graph = get_email_graph()
 start = time.time()
@@ -27,6 +28,29 @@ coms2 = [list(com.indices) for com in coms if len(list(com.indices)) > bigger_th
 length = 0
 for com in coms2:
     length += len(com)
+
+# coms_dict = convert_communities_to_dict(coms2)
+# coms_dict2 = convert_communities_to_dict(coms2*2)
+# coms_dict3 = convert_communities_to_dict(get_communities_list2("data/email/email-communities", " "))
+# coms_dict4 = convert_communities_to_dict(get_communities_list2("data/email/email-communities", " ")*2)
+# coms_dict5 = convert_communities_to_dict([coms2[2]])
+# coms_dict6 = convert_communities_to_dict([[i for i in range(1005)]])
+# coms_dict7 = convert_communities_to_dict([[i] for i in range(1005)])
+# mod1 = get_modularity(get_graph_info("data/email/email-transformed.txt"), coms_dict)
+# mod2 = get_modularity(get_graph_info("data/email/email-transformed.txt"), coms_dict2)
+# mod3 = get_modularity(get_graph_info("data/email/email-transformed.txt"), coms_dict3)
+# mod4 = get_modularity(get_graph_info("data/email/email-transformed.txt"), coms_dict4)
+# mod5 = get_modularity(get_graph_info("data/email/email-transformed.txt"), coms_dict5)
+# mod6 = get_modularity(get_graph_info("data/email/email-transformed.txt"), coms_dict6)
+# mod7 = get_modularity(get_graph_info("data/email/email-transformed.txt"), coms_dict7)
+#
+# print(f"Mod1: {mod1}")
+# print(f"Mod2: {mod2}")
+# print(f"Mod3: {mod3}")
+# print(f"Mod4: {mod4}")
+# print(f"Mod5: {mod5}")
+# print(f"Mod6: {mod6}")
+# print(f"Mod6: {mod7}")
 
 mod_ndocd = cal_modularity(get_graph_info("data/email/email-transformed.txt"), coms2)
 mod_base = cal_modularity(get_graph_info("data/email/email-transformed.txt"), get_communities_list2("data/email/email-communities", " "))

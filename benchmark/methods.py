@@ -8,6 +8,7 @@ from benchmark.rewrite_communities import rewrite_communities, get_communities_l
 import time
 import subprocess
 import re
+from measures.modularity import convert_communities_to_dict, get_modularity
 
 
 def test_ndocd(folder, file_appending, bigger_than=6, weighted=False, **kwargs):
@@ -31,8 +32,10 @@ def test_ndocd(folder, file_appending, bigger_than=6, weighted=False, **kwargs):
 
     # second measure - link belong modularity
     graph_info = get_graph_info(folder + "network" + file_appending + "-transformed.dat")
-    mod_ndocd = cal_modularity(graph_info, coms2)
-    mod_base = cal_modularity(graph_info, com_list)
+    # mod_ndocd = cal_modularity(graph_info, coms2)
+    # mod_base = cal_modularity(graph_info, com_list)
+    mod_ndocd = get_modularity(graph_info, convert_communities_to_dict(coms2))
+    mod_base = get_modularity(graph_info, convert_communities_to_dict(com_list))
     print(f'modularity for ndocd {mod_ndocd:0.04}')
     print(f'modularity for ground-truth {mod_base:0.04}')
     return end-start, nmi, mod_ndocd, mod_base, len(coms2), len(com_list)

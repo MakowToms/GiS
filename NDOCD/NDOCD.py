@@ -83,7 +83,7 @@ class NDOCD:
         community = Community(self.n, initial_vertex)
         for index, degree in self.get_neighbour_vertices(initial_vertex):
             if self.can_add_to_clique(index, community):
-                print(self.graph[index])
+                # print(self.graph[index])
                 community.add_vertex(index, self.graph[index])
         return community
 
@@ -134,7 +134,7 @@ class NDOCD:
             if vertices_to_add.shape[0] == 0:
                 break
             for vertex in vertices_to_add:
-                print(self.graph[vertex])
+                # print(self.graph[vertex])
                 community.add_vertex(vertex, self.graph[vertex])
         return community
 
@@ -178,6 +178,8 @@ class NDOCD:
         argsort = t.argsort()
         if self.modification_type == "percent":
             remove_from = int((1-self.modification_percent) * edges_number * 2)
+            if remove_from == len(t):
+                remove_from -= 1
             t_min = t[argsort[remove_from]]
             while remove_from+1 < edges_number*2 and t[argsort[remove_from+1]] == t_min:
                 remove_from += 1

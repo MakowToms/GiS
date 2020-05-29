@@ -38,20 +38,44 @@ def get_actors_graph(save_transformed=True):
     rows = np.array(data.iloc[:, 1].replace(to_replace))
     if save_transformed:
         to_save = pd.DataFrame(np.vstack([cols, rows]).transpose(), dtype=np.int)
-        to_save.to_csv("data/Filmweb Graph/actors-transformed.txt", index=False)
+        to_save.to_csv("data/Filmweb Graph/actors-transformed.txt", index=False, sep=" ")
     return create_graph_by_cols_and_rows(size, cols, rows)
 
 
-def get_amazon_graph(save_transformed=True):
+def get_NBA_graph(save_transformed=True):
+    data = pd.read_csv("data/NBA Graph/Edges.csv", delimiter=";")
+    uniques = np.unique(data.iloc[:, 0:2])
+    size = uniques.shape[0]
+    cols = data.iloc[:, 0] - 1
+    rows = data.iloc[:, 1] - 1
+    if save_transformed:
+        to_save = pd.DataFrame(np.vstack([cols, rows]).transpose(), dtype=np.int)
+        to_save.to_csv("data/NBA Graph/Edges-transformed.txt", index=False, sep=" ")
+    return create_graph_by_cols_and_rows(size, cols, rows)
+
+
+def get_amazon_graph(save_transformed=True, transform_communities=True):
     data = pd.read_csv("data/amazon/com-amazon.ungraph.txt", delimiter="\t", comment='#')
     uniques = np.unique(data.iloc[:, 0:2])
     size = uniques.shape[0]
     to_replace = dict((val, i) for (i, val) in enumerate(uniques))
+    if transform_communities:
+        coms = get_communities_list2("data/amazon/com-amazon.all.dedup.cmty.txt", "\t")
+        coms_new = []
+        for com in coms:
+            coms_new.append([to_replace[res] for res in com])
+        with open("data/amazon/communities", 'w') as f:
+            for community in coms_new:
+                to_write = ""
+                for res in community:
+                    to_write += str(res) + " "
+                to_write = to_write[:-1]
+                f.write(to_write + "\n")
     cols = replace(np.array(data.iloc[:, 0]), to_replace)
     rows = replace(np.array(data.iloc[:, 1]), to_replace)
     if save_transformed:
         to_save = pd.DataFrame(np.vstack([cols, rows]).transpose(), dtype=np.int)
-        to_save.to_csv("data/amazon/amazon-transformed.txt", index=False)
+        to_save.to_csv("data/amazon/amazon-transformed.txt", index=False, sep=" ")
     return create_graph_by_cols_and_rows(size, cols, rows)
 
 
@@ -110,3 +134,14 @@ def write_communities_to_file(communities, file_name):
                 to_write += str(index) + " "
             to_write = to_write[:-1]
             f.write(to_write + "\n")
+
+
+def get_communities_list2(filename, sep=" "):
+    coms = []
+    with open(filename) as f:
+        lines = f.readlines()
+        for line in lines:
+            res = line.split(sep)
+            res = [int(r) for r in res]
+            coms.append(res)
+    return coms
